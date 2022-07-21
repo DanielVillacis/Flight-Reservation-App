@@ -4,11 +4,13 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.xbstrxct.flightservices.dto.CreateReservationRequest;
+import com.xbstrxct.flightservices.dto.UpdateReservationRequest;
 import com.xbstrxct.flightservices.entities.Flight;
 import com.xbstrxct.flightservices.entities.Passenger;
 import com.xbstrxct.flightservices.entities.Reservation;
@@ -24,7 +26,7 @@ public class ReservationRestController {
 
 	@Autowired
 	PassengerRepository passengerRepository;
-	
+
 	@Autowired
 	ReservationRepository reservationRepository;
 
@@ -34,7 +36,7 @@ public class ReservationRestController {
 	}
 
 	@RequestMapping(value = "/reservations", method = RequestMethod.POST)
-	@Transactional	// "All should happen or nothing should happen"
+	@Transactional // "All should happen or nothing should happen"
 	public Reservation saveReservation(CreateReservationRequest request) {
 		Flight flight = flightRepository.findById(request.getFlightId()).get(); // Will find the flight by the id.
 
@@ -45,15 +47,30 @@ public class ReservationRestController {
 		passenger.setEmail(request.getPassengerEmail());
 		passenger.setPhone(request.getPassengerPhone());
 
-		
 		Passenger savedPassenger = passengerRepository.save(passenger);
-		
+
 		Reservation reservation = new Reservation();
 		reservation.setFlight(flight);
 		reservation.setPassenger(savedPassenger);
-		reservation.setCheckedIn(false);	// Check In will be defined later.
-		
-		return reservationRepository.save(reservation);	// Returning the reservation back to the client once it's done.
+		reservation.setCheckedIn(false); // Check In will be defined later.
+
+		return reservationRepository.save(reservation); // Returning the reservation back to the client once it's done.
+	}
+
+	@RequestMapping(value = "/reservation/{id}")
+	public Reservation findReservation(@PathVariable("id") int id) {
+		return reservationRepository.findById(id).get(); // Returns a single reservation by its id.
+	}
+
+	@RequestMapping(value = "/reservations", method = RequestMethod.PUT)
+	public Reservation updateReservation(UpdateReservationRequest request) {
+		Reservation reservation = reservationRepository.findById(request.getId()).get(); // fetch the current
+																							// reservation
+		reservation.setNumberOfBags(request.getNumberOfBags());
+		reservation.setCheckedIn(request.isCheckIn());
+
+		return reservationRepository.save(reservation);
+
 	}
 
 }

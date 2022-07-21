@@ -1,8 +1,7 @@
 package com.xbstrxct.flightservices.dto;
 
-
 public class CreateReservationRequest {
-	
+
 	private int flightId;
 	private String passengerFirstName;
 	private String passengerLastName;
@@ -84,5 +83,5 @@ public class CreateReservationRequest {
 	public void setSecurityCode(String securityCode) {
 		this.securityCode = securityCode;
 	}
-	
+
 }

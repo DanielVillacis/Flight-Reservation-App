@@ -13,6 +13,7 @@ import com.xbstrxct.flightservices.entities.Passenger;
 import com.xbstrxct.flightservices.entities.Reservation;
 import com.xbstrxct.flightservices.repos.FlightRepository;
 import com.xbstrxct.flightservices.repos.PassengerRepository;
+import com.xbstrxct.flightservices.repos.ReservationRepository;
 
 @RestController
 public class ReservationRestController {
@@ -22,6 +23,9 @@ public class ReservationRestController {
 
 	@Autowired
 	PassengerRepository passengerRepository;
+	
+	@Autowired
+	ReservationRepository reservationRepository;
 
 	@RequestMapping(value = "/flights", method = RequestMethod.GET)
 	public List<Flight> findFlights() {
@@ -45,8 +49,9 @@ public class ReservationRestController {
 		Reservation reservation = new Reservation();
 		reservation.setFlight(flight);
 		reservation.setPassenger(savedPassenger);
+		reservation.setCheckedIn(false);	// Check In will be defined later.
 		
-		return null;
+		return reservationRepository.save(reservation);	// Returning the reservation back to the client once it's done.
 	}
 
 }

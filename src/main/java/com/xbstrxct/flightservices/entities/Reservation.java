@@ -8,11 +8,11 @@ public class Reservation extends AbstractEntity {
 
 	private boolean checkedIn;
 	private int numberOfBags;
-	
+
 	@OneToOne
-	private Flight flight;			// A reservation will have a flight
+	public Flight flight; // A reservation will have a flight
 	@OneToOne
-	private Passenger passenger;	// A reservation will have a passenger	
+	public Passenger passenger; // A reservation will have a passenger
 
 	public boolean isCheckedIn() {
 		return checkedIn;
